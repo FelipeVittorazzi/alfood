@@ -1,21 +1,42 @@
-import { TextField, Button, Grid, Container } from '@mui/material'
-import IRestaurante from '../../interfaces/IRestaurante'
 import axios from 'axios'
+import { TextField, Button, Grid, Container } from '@mui/material'
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+
+import IRestaurante from '../../interfaces/IRestaurante'
 
 const FormRestaurante = () => {
 
     const [nomeRestaurante, setNomeRestaurante] = useState('')
+    const params = useParams()
+
+    useEffect(() => {
+        if (params.id) {
+            axios.get<IRestaurante>(`http://localhost:8000/api/v2/restaurantes/${params.id}/`)
+                .then(response => {
+                    setNomeRestaurante(response.data.nome)
+                })
+        }
+    }, [params])
 
     const onSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-
-        axios.post<IRestaurante[]>('http://localhost:8000/api/v2/restaurantes/', {
-            nome: nomeRestaurante
-        })
-            .then(() => {
-                alert("Restaurante Cadastradi com Sucesso")
+        if (params.id) { 
+            axios.put<IRestaurante[]>(`http://localhost:8000/api/v2/restaurantes/${params.id}/`, {
+                nome: nomeRestaurante
             })
+                .then(() => {
+                    alert("Restaurante atualizado com sucesso!")
+                })
+
+        } else {
+            axios.post<IRestaurante[]>('http://localhost:8000/api/v2/restaurantes/', {
+                nome: nomeRestaurante
+            })
+                .then(() => {
+                    alert("Restaurante cadastrado com sucesso!")
+                })
+        }
     }
 
     return (  
