@@ -1,9 +1,9 @@
-import axios from 'axios'
-import { TextField, Button, Grid, Container } from '@mui/material'
+import { TextField, Button, Grid, Container, Typography, Box } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import IRestaurante from '../../interfaces/IRestaurante'
+import IRestaurante from '../../../interfaces/IRestaurante'
+import http from '../../../http'
 
 const FormRestaurante = () => {
 
@@ -12,7 +12,7 @@ const FormRestaurante = () => {
 
     useEffect(() => {
         if (params.id) {
-            axios.get<IRestaurante>(`http://localhost:8000/api/v2/restaurantes/${params.id}/`)
+            http.get<IRestaurante>(`restaurantes/${params.id}/`)
                 .then(response => {
                     setNomeRestaurante(response.data.nome)
                 })
@@ -22,7 +22,7 @@ const FormRestaurante = () => {
     const onSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         if (params.id) { 
-            axios.put<IRestaurante[]>(`http://localhost:8000/api/v2/restaurantes/${params.id}/`, {
+            http.put<IRestaurante[]>(`restaurantes/${params.id}/`, {
                 nome: nomeRestaurante
             })
                 .then(() => {
@@ -30,7 +30,7 @@ const FormRestaurante = () => {
                 })
 
         } else {
-            axios.post<IRestaurante[]>('http://localhost:8000/api/v2/restaurantes/', {
+            http.post<IRestaurante[]>('restaurantes/', {
                 nome: nomeRestaurante
             })
                 .then(() => {
@@ -40,35 +40,35 @@ const FormRestaurante = () => {
     }
 
     return (  
-        <Container
-            sx={{ width: `100%`, marginTop: 20}}>
+        <Container sx={{ marginTop: 20}}>
             <Grid
                 container
                 spacing={2}
-                xs={12}
                 sx={{ display: 'flex', justifyContent: 'center'}}
             >
-
-                <form onSubmit={onSubmitForm}>
-                    <Grid xs={12}>
-                        <TextField sx={{ width: '100%'}}
+                <Box component="form" onSubmit={onSubmitForm}>
+                    <Typography component="h1" variant="h6">Formulário de Restaurantes</Typography>
+                    <Grid sx={{marginBottom: 1}}>
+                        <TextField
                             value={nomeRestaurante}
                             onChange={ event => setNomeRestaurante(event.target.value) }
                             id="standard-basic"
                             label="Restaurante"
                             variant="standard"
+                            fullWidth
+                            required
                         />
                     </Grid>
-                    <Grid xs={12}>
+                    <Grid>
                         <Button
                             sx={{ width: '100%'}}   
                             type="submit"
-                            variant="outlined">
+                            variant="outlined"
+                            fullWidth>
                             Salvar
                         </Button>
                     </Grid>
-                </form>
-                
+                </Box>
             </Grid>
         </Container>
     )

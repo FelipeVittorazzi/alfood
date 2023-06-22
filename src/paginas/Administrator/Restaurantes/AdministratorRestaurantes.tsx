@@ -3,18 +3,18 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import axios from "axios";
  
-import IRestaurante from "../../interfaces/IRestaurante";
+import IRestaurante from "../../../interfaces/IRestaurante";
+import http from "../../../http";
 
 const AdministratorRestaurantes = () => {
 
-    const [restaurantes, setRestauntes] = useState<IRestaurante[]>([])
+    const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([])
 
     useEffect(() => {
-        axios.get<IRestaurante[]>("http://localhost:8000/api/v2/restaurantes/")
+        http.get<IRestaurante[]>("restaurantes/")
             .then(response => {
-                setRestauntes(response.data)
+                setRestaurantes(response.data)
             })
             .catch(erro => {
                 console.log(erro)
@@ -22,16 +22,16 @@ const AdministratorRestaurantes = () => {
     },[])
 
     const excluir = (restauranteOnDeleted: IRestaurante) => {
-        axios.delete<IRestaurante>(`http://localhost:8000/api/v2/restaurantes/${restauranteOnDeleted.id}/`)
+        http.delete<IRestaurante>(`restaurantes/${restauranteOnDeleted.id}/`)
             .then(() => {
                 const listRestaurante = restaurantes.filter((restaurante) => restaurante.id != restauranteOnDeleted.id)
-                setRestauntes([...listRestaurante])
+                setRestaurantes([...listRestaurante])
             })
     }
 
     return ( 
         <TableContainer component={Paper} sx={{ paddingTop: 5}} >
-            <Link to={"/admin/restaurantes/novo"}>
+            <Link to={"/admin/restaurante/novo"}>
                 <Button variant="outlined">
                     Criar Restaurante
                 </Button>
