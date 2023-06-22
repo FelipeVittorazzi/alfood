@@ -46,7 +46,7 @@ const FormRestaurante = () => {
                 spacing={2}
                 sx={{ display: 'flex', justifyContent: 'center'}}
             >
-                <Box component="form" onSubmit={onSubmitForm}>
+                <Box component="form" onSubmit={onSubmitForm} sx={{width: "50%"}}>
                     <Typography component="h1" variant="h6">Formulário de Restaurantes</Typography>
                     <Grid sx={{marginBottom: 1}}>
                         <TextField
